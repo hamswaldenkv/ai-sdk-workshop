@@ -3,11 +3,18 @@ import { generateText } from "ai";
 import { openai } from "@ai-sdk/openai";
 
 export async function GET(request: NextRequest) {
-  const { text } = await generateText({
-    model: openai("gpt-4"),
-    system: "You\re a friendly assistant",
-    prompt: "Why the sky is blue ?",
-  });
+  console.log("Running at url", request.nextUrl.pathname);
 
-  return NextResponse.json({ text });
+  try {
+    const { text } = await generateText({
+      model: openai("gpt-3.5-turbo"),
+      system: "You\re a friendly assistant",
+      prompt: "Why the sky is blue ?",
+    });
+
+    return NextResponse.json({ text });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message });
+  }
 }
